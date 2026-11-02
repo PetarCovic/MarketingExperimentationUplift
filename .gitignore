@@ -1,0 +1,30 @@
+# Environments, Python caches, and build products
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.coverage
+
+# Licensed third-party data: NEVER publish raw or processed rows
+/data/raw/*
+/data/processed/*
+/data/smoke/*
+!/data/raw/.gitkeep
+!/data/processed/.gitkeep
+!/data/smoke/.gitkeep
+
+# Generated predictions and benchmark artifacts
+/outputs/*
+!/outputs/.gitkeep
+
+# Personal preparation, private data and local notes
+/private/
+/interview_guide/
+*Interview_Guide*.docx
+*Interview_Guide*.md
+.DS_Store
+Thumbs.db

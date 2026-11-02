@@ -1,0 +1,24 @@
+name: Python tests and synthetic smoke
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install
+        run: python -m pip install -e '.[dev]'
+      - name: Unit tests
+        run: python -m pytest -q
+      - name: Synthetic smoke test
+        run: |
+          python -m marketing_uplift.pipeline sample --source data/smoke/synthetic-smoke.csv.gz --rows 10000
+          python -m marketing_uplift.pipeline all --source data/smoke/synthetic-smoke.csv.gz --full data/smoke/full.parquet --sample data/smoke/model_sample.parquet --output outputs/smoke/metrics.json --sample-rows 6000 --outcome visit
+      - name: Verify the smoke output is identified as synthetic
+        run: |
+          python -c "import json; a=json.load(open('outputs/smoke/metrics.json')); assert a['data']['data_kind']=='synthetic'; assert a['uplift']['test_rows']>0"
